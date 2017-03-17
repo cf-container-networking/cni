@@ -121,6 +121,14 @@ type Link interface {
 	Attrs() LinkAttrs
 }
 
+func LinkByName(name string) (Link, error) {
+	veth, err := netlink.LinkByName(name)
+	if err != nil {
+		return nil, fmt.Errorf("failed to lookup %q: %v", name, err)
+	}
+	return &link{veth}, nil
+}
+
 // SetupVeth sets up a virtual ethernet link.
 // Should be in container netns, and will switch back to hostNS to set the host
 // veth end up.
